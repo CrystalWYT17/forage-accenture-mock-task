@@ -16,6 +16,8 @@ package com.mockcompany.webapp.controller;
  */
 import com.mockcompany.webapp.data.ProductItemRepository;
 import com.mockcompany.webapp.model.ProductItem;
+import com.mockcompany.webapp.service.SearchService;
+
 /* The springframework package allows us to take advantage of the spring capabilities */
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -47,11 +49,11 @@ public class SearchController {
      * @Autowired annotation.  Autowire tells the spring framework to automatically find and use an instance of
      * the declared class when creating this class.
      */
-    private final ProductItemRepository productItemRepository;
+    private SearchService searchService;
 
     @Autowired
-    public SearchController(ProductItemRepository productItemRepository) {
-        this.productItemRepository = productItemRepository;
+    public SearchController(SearchService searchService) {
+        this.searchService = searchService;
     }
 
     /**
@@ -80,35 +82,10 @@ public class SearchController {
          *  For an added challenge, update the ProductItemRepository to do the filtering at the database layer :)
          */
 
-        Iterable<ProductItem> allItems = this.productItemRepository.findAll();
         List<ProductItem> itemList = new ArrayList<>();
 
-        boolean exactMatch = query.startsWith("\"") && query.endsWith("\"");
-        if(exactMatch){
-            query = query.substring(1,query.length()-1);
-        }
-
-        // This is a loop that the code inside will execute on each of the items from the database.
-        for (ProductItem item : allItems) {
-            // TODO: Figure out if the item should be returned based on the query parameter!
-            boolean matchesSearch = false;
-
-            if(exactMatch){
-                if(item.getName().contains(query) || item.getDescription().contains(query)){
-                    matchesSearch = true;
-                }
-            }
-            else{
-                if(item.getName().toLowerCase().contains(query.toLowerCase()) || item.getDescription().toLowerCase().contains(query.toLowerCase())){
-                matchesSearch = true;
-                }
-
-            }
-            if(matchesSearch){
-                itemList.add(item);
-            }
+        itemList = searchService.searchProduct(query);
            
-        }
         return itemList;
     }
 }
