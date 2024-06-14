@@ -23,6 +23,14 @@ jobs:
           distribution: "temurin"
           java-version: "17"
 
+      - name: Install dependencies
+        run: yarn install
+        working-directory: client-app
+
+      - name: Build application
+        run: yarn build
+        working-directory: client-app
+
       - name: Build with Gradle
         run: ./gradlew assemble
 
