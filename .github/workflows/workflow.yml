@@ -19,7 +19,7 @@ jobs:
           java-version: "17"
 
       - name: Build with Gradle
-        run: gradlew assemble
+        run: ./gradlew assemble
 
       - name: Run tests
-        run: gradlew test
+        run: ./gradlew test
