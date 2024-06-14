@@ -1,3 +1,0 @@
-git:latest
-pipeline-model-definition:latest
-workflow-aggregator:2.6
